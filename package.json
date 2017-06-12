@@ -1,12 +1,12 @@
 {
-  "name": "envdynamo",
+  "name": "envcredstash",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Load credstash secrets into environment variables.",
+  "bin": "./bin/envcredstash",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "José F. Romaniello <jfromaniello@gmail.com> (http://joseoncode.com)",
   "license": "ISC",
   "devDependencies": {
     "chai": "^4.0.1",
@@ -15,7 +15,6 @@
   "dependencies": {
     "async": "^2.4.1",
     "aws-sdk": "^2.60.0",
-    "epipebomb": "^1.0.0",
     "lodash": "^4.17.4",
     "nodecredstash": "^1.1.0",
     "yargs": "^8.0.1"
