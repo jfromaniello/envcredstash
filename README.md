@@ -20,19 +20,13 @@ credstash put application/MAIL_PASSWORD my-mail-password
 Then you can run your application as follows:
 
 ```
-envcredstash --credstash-table 'credential-store' \
-             --region us-east-2 \
-             --prefix application/ \
-             -- myapplication
+envcredstash --prefix application/ -- myapplication
 ```
 
 Example:
 
 ```
-envcredstash --credstash-table 'credential-store' \
-             --region us-east-2 \
-             --prefix application/ \
-             -- python -c "print os.environ['MAIL_PASSWORD']"
+envcredstash --prefix application/ -- python -c "import os; print os.environ['MAIL_PASSWORD']"
 
 my-mail-password
 ```
@@ -40,10 +34,7 @@ my-mail-password
 Running `env`:
 
 ```
-envcredstash --credstash-table 'credential-store' \
-             --region us-east-2 \
-             --prefix application/ \
-             -- python -c "print os.environ['MAIL_PASSWORD']"
+envcredstash --prefix application/ -- env
 DB_PASSWORD=my-db-password
 MAIL_PASSWORD=my-mail-password
 ```
@@ -51,15 +42,25 @@ MAIL_PASSWORD=my-mail-password
 You can also print the variables with the `export` clause, this is useful to `source`:
 
 ```
-source <(envcredstash --credstash-table 'credential-store' \
-             --region us-east-2 \
-             --prefix application/ \
-             --export)
+source <(envcredstash --prefix application/ --export)
 
-python -c "print os.environ['MAIL_PASSWORD']"
+python -c "import os; print os.environ['MAIL_PASSWORD']"
 my-mail-password
+```
+## Full list of arguments
+
+```
+envcredstash --help
+Options:
+  --credstash-table  The credstash table.          [default: "credential-store"]
+  --prefix           The credstash prefix for keys.      [array] [default: [""]]
+  --region           The credstash region.
+  --export           Export variables syntax.                          [boolean]
+  --list             Export variables syntax.                          [boolean]
+  --help             Show help                                         [boolean]
 ```
 
 ## License
 
 MIT 2017 - José F. Romaniello
+
