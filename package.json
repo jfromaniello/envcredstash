@@ -4,13 +4,14 @@
   "description": "Load credstash secrets into environment variables.",
   "bin": "./bin/envcredstash",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "author": "José F. Romaniello <jfromaniello@gmail.com> (http://joseoncode.com)",
   "license": "ISC",
   "devDependencies": {
     "chai": "^4.0.1",
-    "mocha": "^3.4.2"
+    "mocha": "^3.4.2",
+    "mockuire": "^2.0.2"
   },
   "dependencies": {
     "async": "^2.4.1",

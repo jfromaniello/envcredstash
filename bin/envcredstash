@@ -6,9 +6,8 @@ process.stdout.on('error', function( err ) {
   }
 });
 
-const Credstash = require('nodecredstash');
+const envcredstash = require('../lib');
 const _ = require('lodash');
-const async = require('async');
 const spawnSync = require('child_process').spawnSync;
 
 const argv = require('yargs')
@@ -35,69 +34,28 @@ const argv = require('yargs')
   .help()
   .argv;
 
-function pathToEnv(p) {
-  return  p.replace(/[^\w]/g, '_')
-           .toUpperCase();
-}
-
-const credstash = new Credstash({
-  table: argv.table,
-  awsOpts: { region: argv.region }
-});
-
-credstash.listSecrets((err, secretWithVersions) => {
+envcredstash.get(argv, (err, env) => {
   if (err) {
     console.error(err.message);
     return process.exit(1);
   }
 
-  const envs = _(secretWithVersions)
-                    .map('name')
-                    .uniq()
-                    .map(s => {
-                      const prefix = _.find(argv['prefix'], p => s.indexOf(p) === 0);
-
-                      if (typeof prefix === 'undefined') { return; }
-
-                      return { name: s, env: pathToEnv(s.replace(prefix, '')) };
-                    })
-                    .filter(_.identity)
-                    .value();
-
-  async.each(envs, (env, done) => {
-    credstash.getSecret({ name: env.name }, (err, value) => {
-      if (err) { return done(err); }
-      env.value = value;
-      done();
+  if (argv.list) {
+    return _.forEach(env, (value, key) => {
+      console.log(key);
     });
-  }, (err) => {
-    if (err) {
-      console.error(err.message);
-      return process.exit(1);
-    }
+  }
 
-    const env = envs.reduce((result, env) => {
-      result[env.env] = env.value;
-      return result;
-    }, {});
-
-    if (argv.list) {
-      return _.forEach(env, (value, key) => {
-        console.log(key);
-      });
-    }
-
-    if (argv.export) {
-      return _.forEach(env, (value, key) => {
-        console.log(`export ${key}=${JSON.stringify(value)}`);
-      });
-    }
-
-    const childEnv = _.extend({}, process.env, env);
-
-    spawnSync(argv['_'][0], argv['_'].slice(1), {
-      env: childEnv,
-      stdio: 'inherit'
+  if (argv.export) {
+    return _.forEach(env, (value, key) => {
+      console.log(`export ${key}=${JSON.stringify(value)}`);
     });
+  }
+
+  const childEnv = _.extend({}, process.env, env);
+
+  spawnSync(argv['_'][0], argv['_'].slice(1), {
+    env: childEnv,
+    stdio: 'inherit'
   });
 });

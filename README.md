@@ -1,5 +1,7 @@
 Load [credstash](https://github.com/fugue/credstash) secrets into environment variables.
 
+This project is inspired by [envconsul](https://github.com/hashicorp/envconsul).
+
 ## Installation
 
 ```
