@@ -47,6 +47,7 @@ source <(envcredstash --prefix application/ --export)
 python -c "import os; print os.environ['MAIL_PASSWORD']"
 my-mail-password
 ```
+
 ## Full list of arguments
 
 ```
@@ -58,6 +59,24 @@ Options:
   --export           Export variables syntax.                          [boolean]
   --list             Export variables syntax.                          [boolean]
   --help             Show help                                         [boolean]
+```
+
+## As a library
+
+```
+const envcredstash = require('envcredstash');
+
+envcredstash.get({
+  prefixes: ['application/'],
+  // table:
+  // region:
+}, (err, envs) => {
+  console.dir(envs);
+  //{
+  //  DB_PASSWORD: "my-db-password"
+  //  MAIL_PASSWORD: "my-mail-password"
+  //}
+});
 ```
 
 ## License

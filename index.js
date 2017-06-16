@@ -13,7 +13,17 @@ module.exports.get = function(params, callback) {
     awsOpts: { region: params.region }
   });
 
-  const prefixes = Array.isArray(params.prefix) ? params.prefix : [''];
+  var prefixes;
+
+  if (Array.isArray(params.prefixes)) {
+    prefixes = params.prefixes;
+  } else if (Array.isArray(params.prefix)) {
+    prefixes = params.prefix;
+  } else if (typeof params.prefix === 'string') {
+    prefixes = [params.prefix];
+  } else {
+    prefixes = [''];
+  }
 
   credstash.listSecrets((err, secretWithVersions) => {
     if (err) {

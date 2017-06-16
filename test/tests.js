@@ -29,7 +29,7 @@ class FakeCredstash {
   }
 }
 
-const envcredstash = $require('../lib', { nodecredstash: FakeCredstash });
+const envcredstash = $require('../index', { nodecredstash: FakeCredstash });
 
 describe('envcredstash', () => {
 

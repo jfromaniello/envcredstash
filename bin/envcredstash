@@ -6,7 +6,7 @@ process.stdout.on('error', function( err ) {
   }
 });
 
-const envcredstash = require('../lib');
+const envcredstash = require('../index');
 const _ = require('lodash');
 const spawnSync = require('child_process').spawnSync;
 
