@@ -1,6 +1,6 @@
 {
   "name": "envcredstash",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Load credstash secrets into environment variables.",
   "bin": "./bin/envcredstash",
   "main": "index.js",
