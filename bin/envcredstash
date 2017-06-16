@@ -31,6 +31,10 @@ const argv = require('yargs')
     describe: 'Export variables syntax.',
     boolean: true
   })
+  .option('json', {
+    describe: 'Export variables syntax.',
+    boolean: true
+  })
   .help()
   .argv;
 
@@ -50,6 +54,10 @@ envcredstash.get(argv, (err, env) => {
     return _.forEach(env, (value, key) => {
       console.log(`export ${key}=${JSON.stringify(value)}`);
     });
+  }
+
+  if (argv.json) {
+    return console.log(JSON.stringify(env, null, 2));
   }
 
   const childEnv = _.extend({}, process.env, env);

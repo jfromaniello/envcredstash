@@ -1,11 +1,51 @@
 const async = require('async');
 const Credstash = require('nodecredstash');
 const _ = require('lodash');
+const spawnSync = require('child_process').spawnSync;
 
 function pathToEnv(p) {
   return  p.replace(/[^\w]/g, '_')
            .toUpperCase();
 }
+
+module.exports.getSync = function(params) {
+  const args = [__dirname + '/bin/envcredstash', '--json'];
+
+  if (Array.isArray(params.prefixes)) {
+    args.push('--prefix');
+    args.push(params.prefixes.join(','));
+  } else if (Array.isArray(params.prefix)) {
+    args.push('--prefix');
+    args.push(params.prefix.join(','));
+  } else if (typeof params.prefix === 'string') {
+    args.push('--prefix');
+    args.push(params.prefix);
+  }
+
+  if (params.table) {
+    args.push('--table');
+    args.push(params.table);
+  }
+
+  if (params.region) {
+    args.push('--region');
+    args.push(params.region);
+  }
+
+  const proc = spawnSync(process.execPath, args, {
+    stdio: 'pipe',
+    encoding: 'utf8'
+  });
+
+  if (proc.error) { throw proc.error; }
+
+  if (proc.status !== 0) {
+    throw new Error(proc.stderr.toString());
+  }
+
+  const stdout = proc.stdout.toString();
+  return JSON.parse(stdout);
+};
 
 module.exports.get = function(params, callback) {
   const credstash = new Credstash({
