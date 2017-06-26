@@ -53,7 +53,7 @@ my-mail-password
 ```
 envcredstash --help
 Options:
-  --credstash-table  The credstash table.          [default: "credential-store"]
+  --table            The credstash table.          [default: "credential-store"]
   --prefix           The credstash prefix for keys.      [array] [default: [""]]
   --region           The credstash region.
   --export           Export variables syntax.                          [boolean]
