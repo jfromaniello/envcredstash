@@ -12,11 +12,15 @@ module.exports.getSync = function(params) {
   const args = [__dirname + '/bin/envcredstash', '--json'];
 
   if (Array.isArray(params.prefixes)) {
-    args.push('--prefix');
-    args.push(params.prefixes.join(','));
+    params.prefixes.forEach(p => {
+      args.push('--prefix');
+      args.push(p);
+    });
   } else if (Array.isArray(params.prefix)) {
-    args.push('--prefix');
-    args.push(params.prefix.join(','));
+    params.prefix.forEach(p => {
+      args.push('--prefix');
+      args.push(p);
+    });
   } else if (typeof params.prefix === 'string') {
     args.push('--prefix');
     args.push(params.prefix);

@@ -11,7 +11,7 @@ const _ = require('lodash');
 const spawnSync = require('child_process').spawnSync;
 
 const argv = require('yargs')
-  .option('credstash-table', {
+  .option('table', {
     describe: 'The credstash table.',
     default: 'credential-store'
   })
@@ -37,6 +37,8 @@ const argv = require('yargs')
   })
   .help()
   .argv;
+
+return console.dir(argv);
 
 envcredstash.get(argv, (err, env) => {
   if (err) {
