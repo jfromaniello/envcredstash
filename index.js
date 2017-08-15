@@ -54,7 +54,8 @@ module.exports.getSync = function(params) {
 module.exports.get = function(params, callback) {
   const credstash = new Credstash({
     table: params.table,
-    awsOpts: { region: params.region }
+    awsOpts: { region: params.region },
+    kmsOpts: { maxRetries: 10, retryDelayOptions: { base: 200 } }
   });
 
   var prefixes;
