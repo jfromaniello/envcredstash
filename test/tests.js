@@ -10,7 +10,14 @@ class FakeCredstash {
     if (params.table !== 'credstash-table') {
       throw new Error('wrong table name');
     }
+
+    if (typeof params.kmsOpts === 'undefined' ||
+        typeof params.kmsOpts.maxRetries === 'undefined') {
+      throw new Error('maxRetries must be configured for kmsOpts');
+    }
+
     this._params = params;
+
     this._secrets = {
       'app1/secret': 'a',
       'app2/secret': 'b',
