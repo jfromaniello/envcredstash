@@ -55,7 +55,12 @@ module.exports.get = function(params, callback) {
   const credstash = new Credstash({
     table: params.table,
     awsOpts: { region: params.region },
-    kmsOpts: { maxRetries: 10, retryDelayOptions: { base: 200 } }
+    kmsOpts: {
+      maxRetries: 10,
+      retryDelayOptions: {
+        customBackoff: () => _.random(500, 1500)
+      }
+    }
   });
 
   var prefixes;
