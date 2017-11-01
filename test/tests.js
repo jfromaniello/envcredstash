@@ -4,16 +4,11 @@ const assert = require('chai').assert;
 
 class FakeCredstash {
   constructor(params) {
-    if (params.awsOpts.region !== 'region-xyz') {
+    if (params.region !== 'region-xyz') {
       throw new Error('unknown region');
     }
     if (params.table !== 'credstash-table') {
       throw new Error('wrong table name');
-    }
-
-    if (typeof params.kmsOpts === 'undefined' ||
-        typeof params.kmsOpts.maxRetries === 'undefined') {
-      throw new Error('maxRetries must be configured for kmsOpts');
     }
 
     this._params = params;
@@ -31,12 +26,20 @@ class FakeCredstash {
     callback(null, Object.keys(this._secrets).map(name => ({name})));
   }
 
+  getByPrefixes(params, callback) {
+    const result = Object.keys(this._secrets)
+                         .filter(name => params.prefixes.some(p => name.indexOf(p) === 0))
+                         .map(name => ({name}));
+
+    callback(null, result);
+  }
+
   getSecret(params, callback) {
     callback(null, this._secrets[params.name]);
   }
 }
 
-const envcredstash = $require('../index', { nodecredstash: FakeCredstash });
+const envcredstash = $require('../index', { './lib/credstash': params => new FakeCredstash(params) });
 
 describe('envcredstash', () => {
 

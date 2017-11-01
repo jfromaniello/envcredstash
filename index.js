@@ -1,6 +1,5 @@
 const async = require('async');
-const Credstash = require('nodecredstash');
-const _ = require('lodash');
+const Credstash = require('./lib/credstash');
 const spawnSync = require('child_process').spawnSync;
 
 function pathToEnv(p) {
@@ -52,16 +51,7 @@ module.exports.getSync = function(params) {
 };
 
 module.exports.get = function(params, callback) {
-  const credstash = new Credstash({
-    table: params.table,
-    awsOpts: { region: params.region },
-    kmsOpts: {
-      maxRetries: 10,
-      retryDelayOptions: {
-        customBackoff: () => _.random(500, 1500)
-      }
-    }
-  });
+  const credstash = Credstash(params);
 
   var prefixes;
 
@@ -75,31 +65,26 @@ module.exports.get = function(params, callback) {
     prefixes = [''];
   }
 
-  credstash.listSecrets((err, secretWithVersions) => {
+  credstash.getByPrefixes({ prefixes }, (err, secrets) => {
     if (err) {
       return callback(err);
     }
 
-    const allSecrets = _(secretWithVersions)
-                                .map(s => s.name)
-                                .uniq()
-                                .value();
-
     var envs = [];
 
     prefixes.forEach(prefix => {
-      allSecrets
-        .filter(name => name.indexOf(prefix) === 0)
-        .forEach(name => {
-          const env = pathToEnv(name.replace(prefix, ''));
+      secrets
+        .filter(s => s.name.indexOf(prefix) === 0)
+        .forEach(s => {
+          const env = pathToEnv(s.name.replace(prefix, ''));
           //Override the variables from other prefixes
           envs = envs.filter(e => e.env !== env)
-                     .concat({ name, env });
+                     .concat({ name: s.name, version: s.version, env });
         });
     });
 
     async.each(envs, (env, done) => {
-      credstash.getSecret({ name: env.name }, (err, value) => {
+      credstash.getSecret({ name: env.name, version: env.version }, (err, value) => {
         if (err) { return done(err); }
         env.value = value;
         done();
