@@ -21,7 +21,8 @@ const argv = require('yargs')
     default: ['']
   })
   .option('region', {
-    describe: 'The credstash region.'
+    describe: 'The credstash region.',
+    default: process.env.AWS_REGION
   })
   .option('export', {
     describe: 'Export variables syntax.',

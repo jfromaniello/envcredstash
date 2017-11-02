@@ -32,7 +32,7 @@ module.exports.getSync = function(params) {
 
   if (params.region) {
     args.push('--region');
-    args.push(params.region);
+    args.push(params.region || process.env.AWS_REGION);
   }
 
   const proc = spawnSync(process.execPath, args, {
