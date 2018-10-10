@@ -50,7 +50,7 @@ module.exports.getSync = function(params) {
   return JSON.parse(stdout);
 };
 
-module.exports.get = function(params, callback) {
+function getAsync(params, callback) {
   const credstash = Credstash(params);
 
   var prefixes;
@@ -100,6 +100,19 @@ module.exports.get = function(params, callback) {
       }, {});
 
       callback(null, env);
+    });
+  });
+};
+
+module.exports.get = function(params, callback) {
+  if (typeof callback === 'function') {
+    return getAsync(params, callback);
+  }
+
+  return new Promise((resolve, reject) => {
+    getAsync(params, (err, result) => {
+      if (err) { return reject(err); }
+      resolve(result);
     });
   });
 };
