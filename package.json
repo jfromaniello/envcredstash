@@ -11,14 +11,14 @@
   "license": "ISC",
   "devDependencies": {
     "chai": "^4.0.1",
-    "mocha": "^3.4.2",
+    "mocha": "^5.2.0",
     "mockuire": "^2.0.2"
   },
   "dependencies": {
     "async": "^2.4.1",
-    "aws-sdk": "^2.60.0",
-    "lodash": "^4.17.4",
+    "aws-sdk": "^2.349.0",
+    "lodash": "^4.17.11",
     "nodecredstash": "^1.1.0",
-    "yargs": "^8.0.1"
+    "yargs": "^12.0.2"
   }
 }
